@@ -7,73 +7,67 @@ public class MergeSortAlgorithm : MonoBehaviour
     [ContextMenu("Sort")]
     void Sort()
     {
-        Debug.Log($"Non-Swapped array: {{ {string.Join(", ", nonSortedArr)} }}");
-        MergeSort(nonSortedArr);
-        Debug.Log($"Swapped array: {{ {string.Join(", ", nonSortedArr)} }}");
+        Debug.Log($"Non-Sorted array: {{ {string.Join(", ", nonSortedArr)} }}");
+
+        int[] tempArray = new int[nonSortedArr.Length];
+        MergeSort(nonSortedArr, tempArray, 0, nonSortedArr.Length - 1);
+
+        Debug.Log($"Sorted array: {{ {string.Join(", ", nonSortedArr)} }}");
     }
 
-    private static void MergeSort(int[] array)
+    private static void MergeSort(int[] array, int[] tempArray, int left, int right)
     {
-        int length = array.Length;
-        if (length <= 1) return; //base case
+        if (left >= right) return; // Base case
 
-        int middle = length / 2;
-        int[] leftArray = new int[middle];
-        int[] rightArray = new int[length - middle];
+        int middle = left + (right - left) / 2; // Avoids overflow
 
-        int i = 0; //left array
-        int j = 0; //right array
+        MergeSort(array, tempArray, left, middle);
+        MergeSort(array, tempArray, middle + 1, right);
+        Merge(array, tempArray, left, middle, right);
+    }
 
-        for (; i < length; i++)
+    private static void Merge(int[] array, int[] tempArray, int left, int middle, int right)
+    {
+        int leftIndex = left;
+        int rightIndex = middle + 1;
+        int mergedIndex = left;
+
+        // Merge both halves into tempArray
+        while (leftIndex <= middle && rightIndex <= right)
         {
-            if (i < middle)
+            if (array[leftIndex] <= array[rightIndex])
             {
-                leftArray[i] = array[i];
+                tempArray[mergedIndex] = array[leftIndex];
+                leftIndex++;
             }
             else
             {
-                rightArray[j] = array[i];
-                j++;
+                tempArray[mergedIndex] = array[rightIndex];
+                rightIndex++;
             }
+            mergedIndex++;
         }
-        MergeSort(leftArray);
-        MergeSort(rightArray);
-        Merge(leftArray, rightArray, array);
-    }
 
-    private static void Merge(int[] leftArray, int[] rightArray, int[] array)
-    {
-        int leftSize = array.Length / 2;
-        int rightSize = array.Length - leftSize;
-        int i = 0, l = 0, r = 0; //indices
+        // Copy remaining elements of left half (if any)
+        while (leftIndex <= middle)
+        {
+            tempArray[mergedIndex] = array[leftIndex];
+            leftIndex++;
+            mergedIndex++;
+        }
 
-        //check the conditions for merging
-        while (l < leftSize && r < rightSize)
+        // Copy remaining elements of right half (if any)
+        while (rightIndex <= right)
         {
-            if (leftArray[l] < rightArray[r])
-            {
-                array[i] = leftArray[l];
-                i++;
-                l++;
-            }
-            else
-            {
-                array[i] = rightArray[r];
-                i++;
-                r++;
-            }
+            tempArray[mergedIndex] = array[rightIndex];
+            rightIndex++;
+            mergedIndex++;
         }
-        while (l < leftSize)
+
+        // Copy merged elements back into the original array
+        for (int i = left; i <= right; i++)
         {
-            array[i] = leftArray[l];
-            i++;
-            l++;
-        }
-        while (r < rightSize)
-        {
-            array[i] = rightArray[r];
-            i++;
-            r++;
+            array[i] = tempArray[i];
         }
     }
 }

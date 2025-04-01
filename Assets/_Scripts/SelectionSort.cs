@@ -18,9 +18,7 @@ public class SelectionSort : MonoBehaviour
                     min = i;
                 }
             }
-            int temp = nonSortedArr[j];
-            nonSortedArr[j] = nonSortedArr[min];
-            nonSortedArr[min] = temp;
+            (nonSortedArr[min], nonSortedArr[j]) = (nonSortedArr[j], nonSortedArr[min]);
         }
         Debug.Log($"Swapped array: {{ {string.Join(", ", nonSortedArr)} }}");
     }
