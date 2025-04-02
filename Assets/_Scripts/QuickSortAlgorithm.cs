@@ -1,51 +1,48 @@
+using System;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 public class QuickSortAlgorithm : MonoBehaviour
 {
     public int[] nonSortedArr;
 
-    [ContextMenu("Sort")]
-    void Sort()
+    [ContextMenu("Execute")]
+    private void Execute()
     {
         Debug.Log($"Non-Sorted array: {{ {string.Join(", ", nonSortedArr)} }}");
-        
+
         QuickSort(nonSortedArr, 0, nonSortedArr.Length - 1);
 
         Debug.Log($"Sorted array: {{ {string.Join(", ", nonSortedArr)} }}");
     }
 
-    private static void QuickSort(int[] array, int low, int high)
+    private void QuickSort(int[] array, int start, int end)
     {
-        if (low < high)
-        {
-            int pivotIndex = Partition(array, low, high);
-            QuickSort(array, low, pivotIndex - 1);
-            QuickSort(array, pivotIndex + 1, high);
-        }
+        if (end <= start) return;
+
+        int pivot = Partition(array, start, end);
+
+        QuickSort(array, start, pivot - 1);
+        QuickSort(array, pivot + 1, end);
     }
 
-    private static int Partition(int[] array, int low, int high)
+    private int Partition(int[] array, int start, int end)
     {
-        int pivot = array[high]; // Choosing the last element as pivot
-        int i = low - 1; // Index for the smaller element
+        int pivot = array[end];
 
-        for (int j = low; j < high; j++)
+        int i = start - 1;
+
+        for (int j = start; j < end; j++)
         {
             if (array[j] < pivot)
             {
                 i++;
-                Swap(array, i, j);
+                (array[i], array[j]) = (array[j], array[i]);
             }
         }
-        
-        Swap(array, i + 1, high);
-        return i + 1;
-    }
+        i++;
+        (array[i], array[end]) = (array[end], array[i]);
 
-    private static void Swap(int[] array, int a, int b)
-    {
-        int temp = array[a];
-        array[a] = array[b];
-        array[b] = temp;
+        return i;
     }
 }
