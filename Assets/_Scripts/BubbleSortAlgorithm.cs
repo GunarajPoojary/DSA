@@ -6,22 +6,6 @@ public class BubbleSortAlgorithm : MonoBehaviour
 {
     public int[] nonSortedArr;
 
-    // [ContextMenu("Sort")]
-    // void Sort()
-    // {
-    //     Debug.Log($"Non-Swapped array: {{ {string.Join(", ", nonSortedArr)} }}");
-
-    //     for (int j = 0; j < nonSortedArr.Length - 1; j++)
-    //     {
-    //         for (int i = 0; i < nonSortedArr.Length - j - 1; i++)
-    //         {
-    //             if (nonSortedArr[i + 1] < nonSortedArr[i])
-    //                 (nonSortedArr[i], nonSortedArr[i + 1]) = (nonSortedArr[i + 1], nonSortedArr[i]);
-    //         }
-    //     }
-    //     Debug.Log($"Swapped array: {{ {string.Join(", ", nonSortedArr)} }}");
-    // }
-
     [ContextMenu("Execute")]
     private void Execute()
     {
@@ -34,9 +18,15 @@ public class BubbleSortAlgorithm : MonoBehaviour
 
     private void BubbleSort(int[] array)
     {
-        for (int i = 0; i < array.Length; i++)
+        for (int i = 0; i < array.Length - 1; i++)
         {
-            
+            for (int j = 0; j < array.Length - i - 1; j++)
+            {
+                if (array[j] > array[j + 1])
+                {
+                    (array[j], array[j + 1]) = (array[j + 1], array[j]);
+                }
+            }
         }
     }
 }
